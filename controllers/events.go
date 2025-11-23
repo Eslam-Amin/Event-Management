@@ -61,8 +61,8 @@ func GetEventById(context *gin.Context){
 	}
 	event, err := models.GetEventById(eventId)
 	if err != nil{
-		context.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Couldn't fetch event, try again later!",
+		context.JSON(http.StatusNotFound, gin.H{
+			"message": "Couldn't fetch event!",
 		})
 		return
 	}
