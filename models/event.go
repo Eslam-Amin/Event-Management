@@ -16,8 +16,6 @@ type Event struct {
 	CreatedAt time.Time
 }
 
-var events = []Event{} 
-
 
 func (event *Event) Save() error {
 
