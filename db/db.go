@@ -28,18 +28,19 @@ func createTables(){
 
 
 func createEventsTable(){
-createEventsTable := `CREATE TABLE IF NOT EXISTS events(
+query := `CREATE TABLE IF NOT EXISTS events(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
 		description TEXT NOT NULL,
 		location TEXT NOT NULL,
 		event_date DATETIME NOT NULL,
 		user_id INTEGER NOT NULL,
-		created_at DATETIME NOT NULL
+		created_at DATETIME NOT NULL,
+		FOREIGN KEY(user_id) REFERENCES users(id) 
 		);`
 		
 		
-		_, err := DB.Exec(createEventsTable) 
+		_, err := DB.Exec(query) 
 		if err != nil {
 		fmt.Println("err in creating events table ",err)
 		panic(err)
