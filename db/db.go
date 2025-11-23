@@ -12,11 +12,11 @@ func InitDB(){
 	var err error
 	DB, err = sql.Open("sqlite", "api.db")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("err in db connection ",err)
 		panic("Couldn't connect to database")
 	}
 	
-	DB.SetMaxIdleConns(10)
+	DB.SetMaxOpenConns(10)
 	DB.SetMaxIdleConns(5)
 	createTables()
 }
@@ -29,13 +29,13 @@ func createTables(){
 		description TEXT NOT NULL,
 		location TEXT NOT NULL,
 		date_time DATETIME NOT NULL,
-		user_id INTEGER NOT NULL,
-		)`
+		user_id INTEGER NOT NULL
+		);`
 		
 		
-		_, err :=DB.Exec(createEventsTable) 
+		_, err := DB.Exec(createEventsTable) 
 		if err != nil {
-		fmt.Println(err)
+		fmt.Println("err in creating events table ",err)
 		panic(err)
 	}
 }
