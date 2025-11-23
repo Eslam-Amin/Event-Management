@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"example.com/event-booking/db"
@@ -26,31 +27,33 @@ func main() {
 }
 
 func createEvent(context *gin.Context){
-	var event models.Event
-	err := context.ShouldBindJSON(&event)
-	if err != nil{
-		context.JSON(http.StatusBadRequest, gin.H{
-			"message": "Couldn't parse request data event.",
-		})
-		return
-	}
+  var event models.Event
 
-	event.ID = 1
-	event.UserID = 1
-	err = event.Save()
-	if err != nil{
-		context.JSON(http.StatusInternalServerError, gin.H{
-			"message":"Couldn't create event, try again later!",
-		})
-		return
-	}
+    err := context.ShouldBindJSON(&event)
+    if err != nil {
+        context.JSON(http.StatusBadRequest, gin.H{
+            "message": "Couldn't parse request data.",
+        })
+        return
+    }
 
-	context.JSON(http.StatusOK, gin.H{
-		"message": "Event created successfully",
-		"data": event,
-	})
+    event.UserID = 1
 
+    err = event.Save()
+    if err != nil {
+			fmt.Println(err)
+			context.JSON(http.StatusInternalServerError, gin.H{
+            "message":"Couldn't create event, try again later!",
+        })
+        return
+    }
+
+    context.JSON(http.StatusOK, gin.H{
+        "message": "Event created successfully",
+        "data": event,
+    })
 }
+
 
 
 func getAllEvents(context *gin.Context) {
