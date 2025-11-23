@@ -11,7 +11,7 @@ type Event struct {
 	Name string `binding:"required"`
 	Description string `binding:"required"`
 	Location string	`binding:"required"`
-	DateTime time.Time `binding:"required"`
+	EventDate time.Time `binding:"required"`
 	UserID int 
 	CreatedAt time.Time
 }
@@ -20,26 +20,44 @@ var events = []Event{}
 
 
 func (event *Event) Save() error {
-	query := `
-	INSERT INTO 
-	EVENTS 
-	(name, description, location, dateTime, user_id, created_at)
-	VALUES
-	(?, ?, ?, ?, ?, ?);
-	`
-	stmt, err := db.DB.Prepare(query)
-	if err != nil{
-		return err
-	}
-	defer stmt.Close()
-	result, err := stmt.Exec(event.Name, event.Description, event.Location, event.DateTime, event.UserID, time.Now())
-	if err != nil{
-		return err
-	}
-	id, err := result.LastInsertId()
-	event.ID = id
-	return err
+
+    if event.CreatedAt.IsZero() {
+        event.CreatedAt = time.Now().UTC()
+    }
+
+    query := `
+    INSERT INTO events
+    (name, description, location, event_date, user_id, created_at)
+    VALUES (?, ?, ?, ?, ?, ?);
+    `
+
+    stmt, err := db.DB.Prepare(query)
+    if err != nil {
+        return err
+    }
+    defer stmt.Close()
+
+    res, err := stmt.Exec(
+        event.Name,
+        event.Description,
+        event.Location,
+        event.EventDate,
+        event.UserID,
+        event.CreatedAt,
+    )
+    if err != nil {
+        return err
+    }
+
+    id, err := res.LastInsertId()
+    if err != nil {
+        return err
+    }
+
+    event.ID = id
+    return nil
 }
+
 
 func GetAllEvents() ([]Event, error){
 	query := `SELECT * from events`
@@ -55,7 +73,7 @@ func GetAllEvents() ([]Event, error){
 	
 	for rows.Next(){
 		var event Event
-		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID, &event.CreatedAt)
+		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.EventDate, &event.UserID, &event.CreatedAt)
 		
 		if err != nil{
 			return nil, err
