@@ -129,7 +129,7 @@ func (event *Event) Delete()error{
     return nil
 }
 
-func New() *Event{
+func NewEvent() *Event{
 
 	return &Event{}
 }
