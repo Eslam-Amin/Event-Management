@@ -65,7 +65,7 @@ func GetAllEvents() ([]Event, error){
 		return nil, err
 	}
 	
-	var events []Event
+	events := []Event{}
 	
 	defer rows.Close()
 	
@@ -79,6 +79,7 @@ func GetAllEvents() ([]Event, error){
 
 		events = append(events, event)
 	}
+
 	return events, nil
 }
 
