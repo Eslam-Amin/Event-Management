@@ -65,7 +65,7 @@ func createEventsTable() {
 }
 
 func CreateRegisterationTable() {
-	query := `CREATE TABLE IF NOT EXISTS registrations(
+	query := `CREATE TABLE IF NOT EXISTS event_registrations(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		user_id INTEGER NOT NULL,
 		event_id INTEGER NOT NULL,
