@@ -87,6 +87,20 @@ func GetUserByEmail(email string) (*User, error) {
 	return &user, nil
 }
 
+func GetUserById(id int64) (*User, error) {
+	query := `
+	select * from users where id = ?;
+	`
+	var user User
+	row := db.DB.QueryRow(query, id)
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
 func NewUser(name, email, password string) *User {
 	return &User{
 		Name:     name,
