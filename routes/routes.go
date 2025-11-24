@@ -2,17 +2,21 @@ package routes
 
 import (
 	"example.com/event-booking/controllers"
+	"example.com/event-booking/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(server *gin.Engine){
+func RegisterRoutes(server *gin.Engine) {
 	books := server.Group("/events")
 	{
 		books.GET("/", controllers.GetAllEvents)
-		books.POST("/", controllers.CreateEvent)
 		books.GET("/:id", controllers.GetEventById)
-		books.PUT("/:id", controllers.UpdateEvent)
-		books.DELETE("/:id", controllers.DeleteEvent)
+		protectedBooks := books.Group("/")
+		protectedBooks.Use(middlewares.Authticate)
+		protectedBooks.Use(middlewares.Authorize)
+		protectedBooks.POST("/", controllers.CreateEvent)
+		protectedBooks.PUT("/:id", controllers.UpdateEvent)
+		protectedBooks.DELETE("/:id", controllers.DeleteEvent)
 	}
 
 	auth := server.Group("/auth")
