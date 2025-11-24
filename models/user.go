@@ -45,21 +45,8 @@ func (user *User) Save() error {
 	return err
 }
 
-func (user *User)ValidateCredentials() error{
-	query := `
-	select * from users where email = ?
-	`
-
-	row := db.DB.QueryRow(query, user.Email)
-
-	var hashedPassword string
-
-	err := row.Scan(&user.ID, &user.Name, &user.Email, &hashedPassword)
-	if err != nil {
-		return errors.New("invalid credentials")
-	}
-
-	validPassword := utils.ComparePasswords(user.Password, hashedPassword)
+func (user *User)ValidateCredentials(inputPassword string) error{
+	validPassword := utils.ComparePasswords(inputPassword, user.Password)
 	
 	if !validPassword {
 		return errors.New("invalid credentials")
@@ -89,6 +76,20 @@ func GetAllUsers()([]User, error){
 	}
 
 	return users, nil
+}
+
+func GetUserByEmail(email string) (*User, error){
+	query := `
+	select * from users where email = ?;
+	`
+	var user User
+	row := db.DB.QueryRow(query, email)
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+	if err != nil {
+		return nil, err
+	}
+	
+return &user, nil
 }
 
 func NewUser()*User{

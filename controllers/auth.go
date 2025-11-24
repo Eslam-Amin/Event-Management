@@ -34,9 +34,9 @@ func Singup(context *gin.Context){
 }
 
 func Login(context *gin.Context){
-	var user models.User
-
-	err := context.ShouldBindJSON(&user)
+	var user *models.User
+	var loginCredentials models.LoginCredentials
+	err := context.ShouldBindJSON(&loginCredentials)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"message": "Couldn't parse request data.",
@@ -44,8 +44,15 @@ func Login(context *gin.Context){
 		})
 		return
 	}
-
-	err = user.ValidateCredentials()
+	user, err = models.GetUserByEmail(loginCredentials.Email)
+	if err != nil {
+		context.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Invalid credentials",
+			"error": err.Error(),
+		})
+		return
+	}
+	err = user.ValidateCredentials(loginCredentials.Password)
 	if err != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Invalid credentials",
