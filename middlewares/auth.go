@@ -3,6 +3,7 @@ package middlewares
 import (
 	"net/http"
 
+	"example.com/event-booking/models"
 	"example.com/event-booking/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -27,6 +28,20 @@ func Authticate(context *gin.Context) {
 	}
 
 	context.Set("userId", userId)
+
+	context.Next()
+}
+
+func Authorize(context *gin.Context) {
+	userId := context.GetInt64("userId")
+	_, err := models.GetUserById(userId)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"message": "Unauthorized",
+			"error":   err.Error(),
+		})
+		return
+	}
 
 	context.Next()
 }
