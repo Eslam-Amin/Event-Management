@@ -96,13 +96,8 @@ curl -X POST http://localhost:8080/auth/login -H "Content-Type: application/json
 curl -X POST http://localhost:8080/events/ -H "Content-Type: application/json" -H "Authorization: <TOKEN>" -d '{"name":"Party","description":"End of year","location":"City Hall","event_date":"2025-12-31T19:00:00Z"}'
 ```
 
-**Notes & Next Steps**
+**Next Steps**
 
 - The JWT `secretKey` is set in `utils/jwt.go` as a constant `supersecretkey` — for production change it to a securely loaded secret.
 - You can change the DB path in `db/db.go` if you want the database stored elsewhere.
 - Consider adding request validation, pagination for lists, and tests.
-
-If you'd like, I can also:
-
-- Add example Postman collection
-- Add a `.env` loader and switch the secret/key and DB path to environment variables
