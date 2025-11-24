@@ -26,7 +26,7 @@ func ValidateToken(token string) error {
 		if !ok {
 			return nil, jwt.ErrTokenMalformed
 		}
-		return secretKey, nil
+		return []byte(secretKey), nil
 	})
 	if err != nil {
 		return err
