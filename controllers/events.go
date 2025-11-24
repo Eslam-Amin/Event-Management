@@ -5,32 +5,14 @@ import (
 	"strconv"
 
 	"example.com/event-booking/models"
-	"example.com/event-booking/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func CreateEvent(context *gin.Context) {
-	token := context.Request.Header.Get("Authorization")
-
-	if token == "" {
-		context.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Unauthorized",
-		})
-		return
-	}
-
-	userId, err := utils.ValidateToken(token)
-	if err != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Unauthorized",
-			"error":   err.Error(),
-		})
-		return
-	}
 
 	var event models.Event
-
-	err = context.ShouldBindJSON(&event)
+	userId := context.GetInt64("userId")
+	err := context.ShouldBindJSON(&event)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"message": "Couldn't parse request data.",
