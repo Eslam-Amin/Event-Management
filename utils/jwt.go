@@ -33,7 +33,7 @@ func ValidateToken(token string) error {
 	}
 
 	if !parsedToken.Valid {
-		return errors.New("invalid token!")
+		return errors.New("invalid token")
 	}
 
 	_, ok := parsedToken.Claims.(jwt.MapClaims)
