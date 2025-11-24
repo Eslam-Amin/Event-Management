@@ -47,15 +47,7 @@ func GetUserById(context *gin.Context) {
 }
 
 func GetUsersRegistration(context *gin.Context) {
-	userId, err := strconv.ParseInt(context.Param("id"), 10, 64)
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{
-			"error":   err.Error(),
-			"message": "Invalid user ID",
-		})
-		return
-	}
-
+	userId := context.GetInt64("userId")
 	registrations, err := models.GetRegistrationsByUserId(userId)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{
