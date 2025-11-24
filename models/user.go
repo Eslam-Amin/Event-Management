@@ -15,12 +15,6 @@ type User struct {
 	Password string `json:"-"`
 }
 
-type LoginCredentials struct {
-	Email string `binding:"required"`
-	Password string `binding:"required"`
-}
-
-
 func (user *User) Save() error {
 	query := `
 	INSERT INTO users
