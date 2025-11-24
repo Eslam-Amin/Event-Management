@@ -40,6 +40,7 @@ func (user *User) Save() error {
 	return err
 }
 
+
 func (user *User)ValidateCredentials(inputPassword string) error{
 	validPassword := utils.ComparePasswords(inputPassword, user.Password)
 	
@@ -87,6 +88,10 @@ func GetUserByEmail(email string) (*User, error){
 return &user, nil
 }
 
-func NewUser()*User{
-	return &User{}
+func NewUser(name, email, password string)*User{
+	return &User{
+		Name: name,
+		Email: email,
+		Password: password,
+	}
 }
