@@ -25,6 +25,7 @@ func InitDB() {
 func createDBTables() {
 	createEventsTable()
 	createUsersTable()
+	CreateRegisterationTable()
 }
 
 func createUsersTable() {
@@ -54,6 +55,24 @@ func createEventsTable() {
 		user_id INTEGER NOT NULL,
 		created_at DATETIME NOT NULL,
 		FOREIGN KEY(user_id) REFERENCES users(id) 
+		);`
+
+	_, err := DB.Exec(query)
+	if err != nil {
+		fmt.Println("err in creating events table ", err)
+		panic(err)
+	}
+}
+
+func CreateRegisterationTable() {
+	query := `CREATE TABLE IF NOT EXISTS registrations(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id INTEGER NOT NULL,
+		event_id INTEGER NOT NULL,
+		created_at DATETIME NOT NULL,
+		FOREIGN KEY(user_id) REFERENCES users(id),
+		FOREIGN KEY(event_id) REFERENCES events(id),
+		UNIQUE(user_id, event_id)
 		);`
 
 	_, err := DB.Exec(query)
