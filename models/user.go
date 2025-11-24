@@ -14,6 +14,11 @@ type User struct {
 	Password string `binding:"required"`
 }
 
+type LoginCredentials struct {
+	Email string `binding:"required"`
+	Password string `binding:"required"`
+}
+
 
 func (user *User) Save() error {
 	query := `
